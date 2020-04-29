@@ -44,6 +44,22 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
+  
+  if ENV["RESTY_PATH"]
+    source = ENV["RESTY_PATH"]
+  elsif File.directory?("./openresty")
+    source = "./openresty"
+  elsif File.directory?("../openresty")
+    source = "../openresty"
+  else
+    source = ""
+  end
+
+  if not source == ""
+    config.vm.synced_folder source, "/openresty"
+  end
+
+
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
@@ -65,5 +81,6 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", :path "provision.sh"
+  config.vm.provision "shell", path: "provision.sh",
+     env: { "HTTP_PROXY": ENV["HTTP_PROXY"], "HTTPS_PROXY": ENV["HTTPS_PROXY"]}
 end

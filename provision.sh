@@ -12,3 +12,5 @@ sudo apt-get -y install openresty
 sudo apt-get install -y libpcre3-dev libssl-dev perl make build-essential curl
 sudo apt-get install -y systemtap
 sudo apt-get install -y --no-install-recommends cpanminus
+sudo cpanm --notest Test::Nginx IPC::Run > build.log 2>&1 || (cat build.log && exit 1)
+
